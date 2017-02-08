@@ -1,0 +1,18 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "plugins": ["node_modules/jsdoc-strip-async-await"],
+  "templates": {
+    "cleverLinks": true,
+    "theme": "yeti",
+    "systemName": "Git Backup",
+    "copyright": "Copyright Mtech Access Limited",
+    "includeDate": false
+  },
+  "opts": {
+    "destination": "./docs/",
+    "private": true
+  }
+}
