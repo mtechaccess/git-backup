@@ -1,8 +1,6 @@
 {
-  "github":{
-    "org": "{{org}}",
-    "user": "{{user}}",
-    "token": "{{token}}",
-    "password": "{{password}}"
-  }
+  "org": "{{org}}",
+  "user": "{{user}}",
+  "token": "{{token}}",
+  "password": "{{password}}"
 }
