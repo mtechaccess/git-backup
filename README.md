@@ -10,5 +10,7 @@ Clone all repos for a known user or organisation
   - `user`: github user performing backup
   - `token`: github personal access token, required by github API
   - `backupDir`: location to backup to, i.e `/Users/<name>` (on macOS)
-
+- `npm install`
+- `gulp build`
+- `npm link`
 - run `git-back --backup`
