@@ -1,14 +1,17 @@
 'use strict';
 
+import os from 'os';
 import path from 'path';
 import log from './logger';
 import nodegit from 'nodegit';
 import fs from 'fs-extra-promise';
 import pkg from '../../package.json';
+import inquirer from 'inquirer';
 import request from 'request-promise';
 
 let config;
 let repos;
+let defaultConfig;
 
 const gitHubOpts = {
   url: `https://api.github.com/`,
@@ -84,7 +87,7 @@ async function _cloneRepo(backups, name, repoUrl) {
  */
 async function _getConfig() {
   try {
-    config = await fs.readJsonAsync(`config.json`);
+    config = await fs.readJsonAsync(path.join(os.homedir(), `.${pkg.name}.json`));
     let valid = true;
     for (let key in config) {
       if (String(config[key]).search(/{{[\w\d]*}}/) !== -1) {
@@ -96,6 +99,24 @@ async function _getConfig() {
       gitHubOpts.headers.Authorization = `token ${config.token}`;
     } else {
       throw new Error(`Bad config details.`);
+    }
+  } catch (e) {
+    log.debug(`_getConfig failed!`);
+    throw e;
+  }
+}
+
+/**
+ * Get config file
+ * @method _getDefaultConfig
+ * @private
+ */
+async function _getDefaultConfig() {
+  try {
+    if (fs.existsSync(path.join(os.homedir(), `.${pkg.name}.json`))) {
+      defaultConfig = await fs.readJsonAsync(path.join(os.homedir(), `.${pkg.name}.json`));
+    } else {
+      defaultConfig = await fs.readJsonAsync(path.resolve(path.join(__dirname, `../../.config.json`)));
     }
   } catch (e) {
     log.debug(`_getConfig failed!`);
@@ -166,6 +187,42 @@ async function _backup() {
   }
 }
 
+async function _query() {
+  // "owner": "{{org|user}}",
+  // "isOrg": false,
+  // "user": "{{user}}",
+  // "token": "{{token}}",
+  // "backupDir": "{{/path/to/backups}}"
+  const questions = [{
+    type: `input`,
+    name: `owner`,
+    message: `Repo owner (org or user):`,
+    default: `${defaultConfig.owner}`
+  }, {
+    type: `confirm`,
+    name: `isOrg`,
+    message: `Is the owner an organisation?:`,
+    default: `${defaultConfig.isOrg}`
+  }, {
+    type: `input`,
+    name: `user`,
+    message: `Github user:`,
+    default: `${defaultConfig.user}`
+  }, {
+    type: `input`,
+    name: `token`,
+    message: `Github personal access token:`,
+    default: `${defaultConfig.token}`
+  }, {
+    type: `input`,
+    name: `backupDir`,
+    message: `Location to back up to:`,
+    default: `${os.homedir()}`
+  }];
+
+  return await inquirer.prompt(questions);
+}
+
 /**
  * List known gitlab and github repos
  * @method projects
@@ -217,6 +274,21 @@ export function backup() {
     .then(status => {
       log.info(`Known repos (${repos.length}):`);
       return _backup();
+    })
+    .catch(err => {
+      log.error(err);
+    });
+}
+
+export function createConfig() {
+  log.info(`create config`);
+  _getDefaultConfig()
+    .then(() => {
+      return _query();
+    })
+    .then(newConfig => {
+      console.log(newConfig);
+      return fs.writeFileAsync(path.join(os.homedir(), `.${pkg.name}.json`), JSON.stringify(newConfig, null, 2), `utf8`);
     })
     .catch(err => {
       log.error(err);
