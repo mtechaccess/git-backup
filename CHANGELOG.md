@@ -1,5 +1,15 @@
+<a name="0.3.2"></a>
+## [0.3.2](https://github.com/mtechaccess/git-backup/compare/0.3.1...v0.3.2) (2017-02-09)
+
+
+### docs
+
+* (README): installation instructions ([237577c0230744086ae3fdd9aac07c3a1edda882](https://github.com/mtechaccess/git-backup/commit/237577c0230744086ae3fdd9aac07c3a1edda882))
+
+
+
 <a name="0.3.1"></a>
-## [0.3.1](https://github.com/mtechaccess/git-backup/compare/0.3.0...v0.3.1) (2017-02-09)
+## [0.3.1](https://github.com/mtechaccess/git-backup/compare/0.3.0...0.3.1) (2017-02-09)
 
 
 ### update
