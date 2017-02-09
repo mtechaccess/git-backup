@@ -2,15 +2,28 @@
 
 Clone all repos for a known user or organisation
 
-- `cp .config.json config.json`
-- edit `config.json` as necessary
-
+- `npm install`
+- `gulp build`
+- `npm link`
+- run `git-back --init` to create/edit config file
   - `owner`: user or organisation to back up from
   - `isOrg`: boolean, if true, assume owner is an organisation
   - `user`: github user performing backup
   - `token`: github personal access token, required by github API
   - `backupDir`: location to backup to, i.e `/Users/<name>` (on macOS)
-- `npm install`
-- `gulp build`
-- `npm link`
-- run `git-back --backup`
+- on macOS, edit the `uk.co.mtechaccess.git-backup.plist` so the 1st string in the `ProgramArguments` points to the linked binary
+
+```
+<key>ProgramArguments</key>
+<array>
+  <string>/Users/loki/.npm-packages/bin/git-backup</string>
+  <string>-c</string>
+</array>
+```
+
+You can find out where this is using the following command in the terminal: `which gitbackup`
+
+Then copy the plist to the `~/Library/LaunchAgents` directory.
+Finally, load it: `launchctl load ~/Library/LaunchAgents/uk.co.mtechaccess.git-backup.plist`
+
+You can check if the service loaded correctly thus: `launchctl list | grep git-backup`
