@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/bin/cli"
   },
+  "bin": {
+    "git-backup": "dist/bin/cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mtechaccess/git-backup.git"
@@ -57,5 +60,8 @@
     "gulp-util": "^3.0.8",
     "jsdoc-strip-async-await": "^0.1.0",
     "minimist": "^1.2.0"
+  },
+  "directories": {
+    "doc": "docs"
   }
 }
