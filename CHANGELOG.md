@@ -1,5 +1,20 @@
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/mtechaccess/git-backup/compare/0.2.0...v0.3.0) (2017-02-09)
+
+
+### new
+
+* add eslintrc ([341d01e1b717aca78b0c8b4be16f0d3cf61227d7](https://github.com/mtechaccess/git-backup/commit/341d01e1b717aca78b0c8b4be16f0d3cf61227d7))
+
+### update
+
+* cloning to back directory completed. uses token and oauth. _getConfig checks if config values are malformed ([308da021af73547a41a872d39e0ba894a1a0742d](https://github.com/mtechaccess/git-backup/commit/308da021af73547a41a872d39e0ba894a1a0742d))
+* do not need password, just use personal access token. ([b50494894da4bba6a1a4c7d00a03f8baf5a37b29](https://github.com/mtechaccess/git-backup/commit/b50494894da4bba6a1a4c7d00a03f8baf5a37b29))
+
+
+
 <a name="0.2.0"></a>
-# 0.2.0 (2017-02-09)
+# [0.2.0](https://github.com/mtechaccess/git-backup/compare/a8e9f591a1d77ca8325722f5bddbb7d3763dfeec...0.2.0) (2017-02-09)
 
 
 ### deps
