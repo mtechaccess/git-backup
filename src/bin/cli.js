@@ -14,7 +14,9 @@ log.info(`${pkg.name} ${pkg.version}`);
 commander
   .version(pkg.version)
   .option(`-l, --list`, `List known repos in config.json`)
+  .option(`-c, --config`, `Show config`)
   .option(`-b, --backup`, `Clone know repos defined in config.json`)
+  .option(`-D, --debug`, `enable debug messages`)
   .parse(process.argv);
 
 if (commander.debug) {
@@ -23,6 +25,8 @@ if (commander.debug) {
 
 if (commander.backup) {
   lib.backup();
+} else if (commander.config) {
+  lib.showConfig();
 } else {
   lib.list();
 }
