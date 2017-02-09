@@ -3,5 +3,5 @@
   "isOrg": false,
   "user": "{{user}}",
   "token": "{{token}}",
-  "password": "{{password}}"
+  "backupDir": "{{/path/to/backups}}"
 }
