@@ -1,6 +1,6 @@
 {
   "name": "git-backup",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Clone all repos for a known user or organisation",
   "main": "lib",
   "scripts": {

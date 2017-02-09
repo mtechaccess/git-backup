@@ -1,5 +1,15 @@
+<a name="0.3.1"></a>
+## [0.3.1](https://github.com/mtechaccess/git-backup/compare/0.3.0...v0.3.1) (2017-02-09)
+
+
+### update
+
+* (package): include bin path ([0111db22afc2fe5b0aa870dd07be8423008a139d](https://github.com/mtechaccess/git-backup/commit/0111db22afc2fe5b0aa870dd07be8423008a139d))
+
+
+
 <a name="0.3.0"></a>
-# [0.3.0](https://github.com/mtechaccess/git-backup/compare/0.2.0...v0.3.0) (2017-02-09)
+# [0.3.0](https://github.com/mtechaccess/git-backup/compare/0.2.0...0.3.0) (2017-02-09)
 
 
 ### new
