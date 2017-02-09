@@ -1,0 +1,42 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 7
+  },
+  "extends": [
+    "google",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "plugins": [
+    "promise"
+  ],
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "max-len": ["warn", 250, 2],
+    "complexity": [2, 10],
+    "spaced-comment": 0,
+    "no-multi-spaces": 0,
+    "radix": [2, "as-needed"],
+    "valid-jsdoc": [2, {
+      "requireReturn": false,
+      "requireReturnDescription": false
+    }],
+    "quotes": [2, "backtick"],
+    "arrow-parens": ["error", "as-needed"],
+    "comma-dangle": ["error", "never"],
+    "prefer-const": "error",
+    "promise/always-return": "error",
+    "promise/no-return-wrap": "error",
+    "promise/param-names": "error",
+    "promise/catch-or-return": "error",
+    "promise/no-native": "off",
+    "promise/no-nesting": "warn",
+    "promise/no-promise-in-callback": "warn",
+    "promise/no-callback-in-promise": "warn",
+    "promise/avoid-new": "warn"
+  }
+}
