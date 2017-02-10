@@ -1,5 +1,15 @@
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/mtechaccess/git-backup/compare/0.4.0...v0.4.1) (2017-02-10)
+
+
+### update
+
+* plist calls backup ([833c0912ab5f8574430de5d6c4cb82f47f686ebb](https://github.com/mtechaccess/git-backup/commit/833c0912ab5f8574430de5d6c4cb82f47f686ebb))
+
+
+
 <a name="0.4.0"></a>
-# [0.4.0](https://github.com/mtechaccess/git-backup/compare/0.3.2...v0.4.0) (2017-02-09)
+# [0.4.0](https://github.com/mtechaccess/git-backup/compare/0.3.2...0.4.0) (2017-02-09)
 
 
 ### feat
