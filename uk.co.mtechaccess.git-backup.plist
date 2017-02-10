@@ -8,7 +8,7 @@
     <key>ProgramArguments</key>
     <array>
       <string>/Users/loki/.npm-packages/bin/git-backup</string>
-      <string>-c</string>
+      <string>-b</string>
     </array>
 
     <key>EnvironmentVariables</key>
