@@ -5,7 +5,7 @@ Clone all repos for a known user or organisation
 - `npm install`
 - `gulp build`
 - `npm link`
-- run `git-back --init` to create/edit config file
+- run `git-backup --init` to create/edit config file
   - `owner`: user or organisation to back up from
   - `isOrg`: boolean, if true, assume owner is an organisation
   - `user`: github user performing backup
@@ -17,11 +17,11 @@ Clone all repos for a known user or organisation
 <key>ProgramArguments</key>
 <array>
   <string>/Users/loki/.npm-packages/bin/git-backup</string>
-  <string>-c</string>
+  <string>-b</string>
 </array>
 ```
 
-You can find out where this is using the following command in the terminal: `which gitbackup`
+You can find out where this is using the following command in the terminal: `which git-backup`
 
 Then copy the plist to the `~/Library/LaunchAgents` directory.
 Finally, load it: `launchctl load ~/Library/LaunchAgents/uk.co.mtechaccess.git-backup.plist`
