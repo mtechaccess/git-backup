@@ -1,5 +1,15 @@
+<a name="0.4.2"></a>
+## [0.4.2](https://github.com/mtechaccess/git-backup/compare/0.4.1...v0.4.2) (2017-02-22)
+
+
+### fix
+
+* include path to node in plist ([508652647c95dc31ff0be2ed8c2fe6e9758d32be](https://github.com/mtechaccess/git-backup/commit/508652647c95dc31ff0be2ed8c2fe6e9758d32be))
+
+
+
 <a name="0.4.1"></a>
-## [0.4.1](https://github.com/mtechaccess/git-backup/compare/0.4.0...v0.4.1) (2017-02-10)
+## [0.4.1](https://github.com/mtechaccess/git-backup/compare/0.4.0...0.4.1) (2017-02-10)
 
 
 ### update
