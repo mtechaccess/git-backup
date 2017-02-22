@@ -16,6 +16,7 @@ Clone all repos for a known user or organisation
 ```
 <key>ProgramArguments</key>
 <array>
+  <string>/usr/local/bin/node</string>
   <string>/Users/loki/.npm-packages/bin/git-backup</string>
   <string>-b</string>
 </array>
