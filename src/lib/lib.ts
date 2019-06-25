@@ -107,7 +107,7 @@ async function _getRepos(): Promise<any> {
   let repos: any[] = [];
 
   try {
-    repos = await _getPage(null, options, repos);
+    repos = await _getPage(options, repos);
     return repos;
   } catch (err) {
     console.error(err.toString());
@@ -115,9 +115,16 @@ async function _getRepos(): Promise<any> {
   }
 }
 
-async function _getPage(response: any, options: any, repos: any[]) {
+/**
+ * Called recursively to get all pages of data form github
+ *
+ * @param {*} options request options
+ * @param {any[]} repos current set of repos
+ * @returns
+ */
+async function _getPage(options: any, repos: any[]) {
   try {
-    response = await got(options.url, options);
+    const response = await got(options.url, options);
     repos = repos.concat(response.body);
 
     const links = response.headers.link.toString().split(`,`).map((l: string) => l.trim());
@@ -125,12 +132,11 @@ async function _getPage(response: any, options: any, repos: any[]) {
     if (links[0].includes(`; rel="next"`)) {
       options.url = links[0].split(`; rel="next"`)[0];
       options.url = options.url.replace(`<`, ``).replace(`>`, ``);
-      repos = await _getPage(response, options, repos);
+      repos = await _getPage(options, repos);
     }
 
     return repos;
   } catch (e) {
-
     throw e;
   }
 }
@@ -182,6 +188,11 @@ async function _backup(repos: any[]) {
   }
 }
 
+/**
+ *  Interactively build config items
+ *
+ * @returns
+ */
 async function _query() {
   // "owner": "{{org|user}}",
   // "isOrg": false,
@@ -267,6 +278,11 @@ export async function backup() {
   }
 }
 
+/**
+ * Create config
+ *
+ * @export
+ */
 export function createConfig() {
   log.info(`create config`);
   _getDefaultConfig()

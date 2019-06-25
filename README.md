@@ -2,9 +2,7 @@
 
 Clone all repos for a known user or organisation
 
-- `npm install`
-- `gulp build`
-- `npm link`
+- `npm install -g @mtechaccess/git-backup`
 - run `git-backup --init` to create/edit config file
   - `owner`: user or organisation to back up from
   - `isOrg`: boolean, if true, assume owner is an organisation
@@ -17,7 +15,7 @@ Clone all repos for a known user or organisation
 <key>ProgramArguments</key>
 <array>
   <string>/usr/local/bin/node</string>
-  <string>/Users/loki/.npm-packages/bin/git-backup</string>
+  <string>/Users/<name>/.npm-packages/bin/git-backup</string>
   <string>-b</string>
 </array>
 ```
