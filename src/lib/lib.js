@@ -2,16 +2,17 @@
 
 import os from 'os';
 import path from 'path';
-import log from './logger';
+import * as log from '@mtechaccess/logger';
 import nodegit from 'nodegit';
-import fs from 'fs-extra-promise';
-import pkg from '../../package.json';
+import fs from 'fs-extra';
 import inquirer from 'inquirer';
 import request from 'request-promise';
 
 let config;
 let repos;
 let defaultConfig;
+
+const pkg = fs.readJsonSync(path.resolve(__dirname, `..`, `..`, 'package.json'));
 
 const gitHubOpts = {
   url: `https://api.github.com/`,
@@ -159,7 +160,7 @@ async function _backup() {
     // - clone to .gitbackups
 
     const oldBackups = path.join(`${config.backupDir}`, `.old-git-backups`);
-    const backups    = path.join(`${config.backupDir}`, `.git-backups`);
+    const backups = path.join(`${config.backupDir}`, `.git-backups`);
 
     log.debug(`cull old backups`);
     await fs.removeAsync(oldBackups);
