@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 'use strict';
-import "babel-polyfill";
 
-import commander from 'commander';
-import log from '../lib/logger';
+import * as log from '@mtechaccess/logger';
+import * as commander from 'commander';
+import * as fs from 'fs-extra';
+import * as path from 'path';
 import * as lib from '../lib/lib';
-import pkg from '../../package.json';
+const pkg = fs.readJsonSync(path.resolve(__dirname, `..`, `..`, 'package.json'));
 
 // ====================================
 // main
-log.info(`${pkg.name} ${pkg.version}`);
+console.log(`${pkg.name} ${pkg.version}`);
 
 commander
   .version(pkg.version)
@@ -21,7 +22,7 @@ commander
   .parse(process.argv);
 
 if (commander.debug) {
-  log.transports.console.level = `debug`;
+  log.enableDebug(true);
 }
 
 if (commander.backup) {
