@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
-import commander from 'commander';
-import * as fs from 'fs-extra';
 import * as log from '@mtechaccess/logger';
+import * as commander from 'commander';
+import * as fs from 'fs-extra';
+import * as path from 'path';
 import * as lib from '../lib/lib';
 const pkg = fs.readJsonSync(path.resolve(__dirname, `..`, `..`, 'package.json'));
 

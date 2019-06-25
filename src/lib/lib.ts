@@ -1,32 +1,31 @@
 'use strict';
 
-import os from 'os';
-import path from 'path';
+import * as gitOps from '@mtechaccess/git-ops';
 import * as log from '@mtechaccess/logger';
-import nodegit from 'nodegit';
-import fs from 'fs-extra';
-import inquirer from 'inquirer';
-import request from 'request-promise';
+import * as fs from 'fs-extra';
+import * as got from 'got';
+import * as inquirer from 'inquirer';
+import * as os from 'os';
+import * as path from 'path';
 
-let config;
-let repos;
-let defaultConfig;
+let config: any;
+let defaultConfig: any;
 
 const pkg = fs.readJsonSync(path.resolve(__dirname, `..`, `..`, 'package.json'));
 
 const gitHubOpts = {
-  url: `https://api.github.com/`,
   headers: {
-    "User-Agent": pkg.name,
-    //Authorization: `token ${.github.token}`,
-    Accept: `application/vnd.github.v3+json`,
-    "Cache-Control": `no-cache,no-store`
+    'Accept': `application/vnd.github.v3+json`,
+    'Authorization': ``,
+    'Cache-Control': `no-cache,no-store`,
+    'User-Agent': pkg.name
   },
   json: true,
-  timeout: 20000,
   pool: {
     maxSockets: 2
-  }
+  },
+  timeout: 20000,
+  url: `https://api.github.com/`
 };
 
 /**
@@ -35,7 +34,7 @@ const gitHubOpts = {
  * @param {Number} [ms=4000] number of milliseconds to sleep for
  * @private
  */
-function sleep(ms = 1100) {
+function sleep(ms: number = 1100) {
   const waitTimeInMilliseconds = new Date().getTime() + ms;
   while (new Date().getTime() < waitTimeInMilliseconds) {
     true;
@@ -45,40 +44,11 @@ function sleep(ms = 1100) {
 /**
  * Simple deep object clone.
  * @method _clone
- * @param {Object} obj to be cloned
- * @return {Object} clone
+ * @param {any} obj to be cloned
+ * @return {any} clone
  */
-function _clone(obj) {
+function _clone(obj: any): any {
   return JSON.parse(JSON.stringify(obj));
-}
-/**
- * Clone repo to `config.target`.
- * @method _cloneRepo
- * @param {string} name repo name
- * @param {string} repoUrl url repo url
- * @return {Promise}
- */
-async function _cloneRepo(backups, name, repoUrl) {
-  try {
-    log.info(`Cloning repo ${backups}:${name}:${repoUrl}`);
-    const cloneOptions = {
-      fetchOpts: {
-        callbacks: {
-          certificateCheck: () => {
-            return 1;
-          },
-          credentials: () => {
-            return nodegit.Cred.userpassPlaintextNew(config.token, `x-oauth-basic`);
-          }
-        }
-      }
-    };
-    const repo = await nodegit.Clone(repoUrl, path.join(backups, name), cloneOptions); // eslint-disable-line new-cap
-    return repo;
-  } catch (err) {
-    log.error(`cloneRepo failed for ${name}`);
-    throw err;
-  }
 }
 
 /**
@@ -88,9 +58,9 @@ async function _cloneRepo(backups, name, repoUrl) {
  */
 async function _getConfig() {
   try {
-    config = await fs.readJsonAsync(path.join(os.homedir(), `.${pkg.name}.json`));
+    config = await fs.readJson(path.join(os.homedir(), `.${pkg.name}.json`));
     let valid = true;
-    for (let key in config) {
+    for (const key in config) {
       if (String(config[key]).search(/{{[\w\d]*}}/) !== -1) {
         log.warn(`Invalid config item ${key}: ${config[key]}`);
         valid = false;
@@ -115,9 +85,9 @@ async function _getConfig() {
 async function _getDefaultConfig() {
   try {
     if (fs.existsSync(path.join(os.homedir(), `.${pkg.name}.json`))) {
-      defaultConfig = await fs.readJsonAsync(path.join(os.homedir(), `.${pkg.name}.json`));
+      defaultConfig = await fs.readJson(path.join(os.homedir(), `.${pkg.name}.json`));
     } else {
-      defaultConfig = await fs.readJsonAsync(path.resolve(path.join(__dirname, `../../.config.json`)));
+      defaultConfig = await fs.readJson(path.resolve(path.join(__dirname, `../../.config.json`)));
     }
   } catch (e) {
     log.debug(`_getConfig failed!`);
@@ -128,17 +98,40 @@ async function _getDefaultConfig() {
 /**
  * Get known repos for user or organisation
  * @method _getRepos
- * @return {Promise}
+ * @return {Promise<any>}
  * @private
  */
-async function _getRepos() {
+async function _getRepos(): Promise<any> {
   const options = _clone(gitHubOpts);
   options.url += config.isOrg ? `orgs/${config.owner}/repos?per_page=100` : `users/${config.owner}/repos?per_page=100`;
+  let repos: any[] = [];
+
   try {
-    repos = await request(options);
-    return `fetched`;
+    repos = await _getPage(null, options, repos);
+    return repos;
   } catch (err) {
-    throw new Error(err);
+    console.error(err.toString());
+    throw err;
+  }
+}
+
+async function _getPage(response: any, options: any, repos: any[]) {
+  try {
+    response = await got(options.url, options);
+    repos = repos.concat(response.body);
+
+    const links = response.headers.link.toString().split(`,`).map((l: string) => l.trim());
+
+    if (links[0].includes(`; rel="next"`)) {
+      options.url = links[0].split(`; rel="next"`)[0];
+      options.url = options.url.replace(`<`, ``).replace(`>`, ``);
+      repos = await _getPage(response, options, repos);
+    }
+
+    return repos;
+  } catch (e) {
+
+    throw e;
   }
 }
 
@@ -146,7 +139,7 @@ async function _getRepos() {
  * Driver method for backing up github repos.
  * @method _backup
  */
-async function _backup() {
+async function _backup(repos: any[]) {
   try {
     // pseudo code:
     // test for .old-git-backups
@@ -163,22 +156,23 @@ async function _backup() {
     const backups = path.join(`${config.backupDir}`, `.git-backups`);
 
     log.debug(`cull old backups`);
-    await fs.removeAsync(oldBackups);
+    await fs.remove(oldBackups);
 
     log.debug(`check/create ${config.backupDir}/.git-backups`);
-    await fs.ensureDirAsync(backups);
+    await fs.ensureDir(backups);
 
     log.debug(`copy current backups to .old-git-backups`);
-    await fs.moveAsync(backups, oldBackups);
+    await fs.move(backups, oldBackups);
 
     log.debug(`cull current backups`);
-    await fs.emptyDirAsync(backups);
-
+    await fs.emptyDir(backups);
 
     log.debug(`start cloning!`);
-    for (let repo of repos) {
+    for (const repo of repos) {
       sleep();
-      await _cloneRepo(backups, repo.name, repo.clone_url);
+      const repoDir = path.join(backups, repo.name);
+      await fs.mkdir(repoDir);
+      await gitOps.cloneRepo({ clone: true }, repo.clone_url, repoDir);
     }
 
     log.info(`backup complete`);
@@ -195,31 +189,31 @@ async function _query() {
   // "token": "{{token}}",
   // "backupDir": "{{/path/to/backups}}"
   const questions = [{
-    type: `input`,
-    name: `owner`,
+    default: `${defaultConfig.owner}`,
     message: `Repo owner (org or user):`,
-    default: `${defaultConfig.owner}`
+    name: `owner`,
+    type: `input`
   }, {
-    type: `confirm`,
-    name: `isOrg`,
+    default: `${defaultConfig.isOrg}`,
     message: `Is the owner an organisation?:`,
-    default: `${defaultConfig.isOrg}`
+    name: `isOrg`,
+    type: `confirm`
   }, {
-    type: `input`,
-    name: `user`,
+    default: `${defaultConfig.user}`,
     message: `Github user:`,
-    default: `${defaultConfig.user}`
+    name: `user`,
+    type: `input`
   }, {
-    type: `input`,
-    name: `token`,
+    default: `${defaultConfig.token}`,
     message: `Github personal access token:`,
-    default: `${defaultConfig.token}`
+    name: `token`,
+    type: `input`
   }, {
-    type: `input`,
-    name: `backupDir`,
+    default: `${os.homedir()}`,
     message: `Location to back up to:`,
-    default: `${os.homedir()}`
-  }];
+    name: `backupDir`,
+    type: `input`
+  }] as inquirer.Questions;
 
   return await inquirer.prompt(questions);
 }
@@ -228,22 +222,17 @@ async function _query() {
  * List known gitlab and github repos
  * @method projects
  */
-export function list() {
-  _getConfig()
-    .then(() => {
-      return _getRepos();
-    })
-    .then(status => {
-      log.debug(status);
-      log.info(`Known repos (${repos.length}):`);
-      for (const repo of repos) {
-        log.info(`=> ${repo.id}:${repo.name}:${repo.clone_url}`);
-      }
-      return true;
-    })
-    .catch(err => {
-      log.error(err);
-    });
+export async function list() {
+  try {
+    await _getConfig();
+    const repos = await _getRepos();
+    log.info(`Known repos (${repos.length}):`);
+    for (const repo of repos) {
+      log.info(`=> ${repo.id}:${repo.name}:${repo.clone_url}`);
+    }
+  } catch (e) {
+    log.error(e);
+  }
 }
 
 /**
@@ -257,7 +246,7 @@ export function showConfig() {
       log.info(config);
       return true;
     })
-    .catch(err => {
+    .catch((err) => {
       log.error(err);
     });
 }
@@ -266,19 +255,16 @@ export function showConfig() {
  * Backup known repos to back location.
  * @method backup
  */
-export function backup() {
-  log.info(`backup`);
-  _getConfig()
-    .then(() => {
-      return _getRepos();
-    })
-    .then(status => {
-      log.info(`Known repos (${repos.length}):`);
-      return _backup();
-    })
-    .catch(err => {
-      log.error(err);
-    });
+export async function backup() {
+  try {
+    log.info(`backup`);
+    await _getConfig();
+    const repos = await _getRepos();
+    log.info(`Known repos (${repos.length})`);
+    _backup(repos);
+  } catch (err) {
+    log.error(err);
+  }
 }
 
 export function createConfig() {
@@ -287,11 +273,11 @@ export function createConfig() {
     .then(() => {
       return _query();
     })
-    .then(newConfig => {
+    .then((newConfig) => {
       console.log(newConfig);
-      return fs.writeFileAsync(path.join(os.homedir(), `.${pkg.name}.json`), JSON.stringify(newConfig, null, 2), `utf8`);
+      return fs.writeFile(path.join(os.homedir(), `.${pkg.name}.json`), JSON.stringify(newConfig, null, 2), `utf8`);
     })
-    .catch(err => {
+    .catch((err) => {
       log.error(err);
     });
 }
