@@ -58,7 +58,7 @@ function _clone(obj: any): any {
  */
 async function _getConfig() {
   try {
-    config = await fs.readJson(path.join(os.homedir(), `.${pkg.name}.json`));
+    config = await fs.readJson(path.join(os.homedir(), `.git-backup.json`));
     let valid = true;
     for (const key in config) {
       if (String(config[key]).search(/{{[\w\d]*}}/) !== -1) {
@@ -291,7 +291,7 @@ export function createConfig() {
     })
     .then((newConfig) => {
       console.log(newConfig);
-      return fs.writeFile(path.join(os.homedir(), `.${pkg.name}.json`), JSON.stringify(newConfig, null, 2), `utf8`);
+      return fs.writeFile(path.join(os.homedir(), `.git-backup.json`), JSON.stringify(newConfig, null, 2), `utf8`);
     })
     .catch((err) => {
       log.error(err);
