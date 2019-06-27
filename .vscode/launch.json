@@ -11,8 +11,8 @@
       "program": "${workspaceFolder}/dist/bin/cli.js",
       "cwd": "/Users/loki",
       "args": [
-        "debug",
-        "list"
+        "-d",
+        "-c"
       ],
       "console": "integratedTerminal"
     },
