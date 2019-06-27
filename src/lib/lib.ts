@@ -250,16 +250,15 @@ export async function list() {
  * Show config details.
  * @method showConfig
  */
-export function showConfig() {
-  log.info(`show config`);
-  _getConfig()
-    .then(() => {
-      log.info(config);
-      return true;
-    })
-    .catch((err) => {
-      log.error(err);
-    });
+export async function showConfig() {
+  try {
+    log.info(`show config`);
+    await _getConfig();
+    log.info(`%o`, config);
+
+  } catch (err) {
+    log.error(err.toString());
+  }
 }
 
 /**
@@ -283,17 +282,13 @@ export async function backup() {
  *
  * @export
  */
-export function createConfig() {
-  log.info(`create config`);
-  _getDefaultConfig()
-    .then(() => {
-      return _query();
-    })
-    .then((newConfig) => {
-      console.log(newConfig);
-      return fs.writeFile(path.join(os.homedir(), `.git-backup.json`), JSON.stringify(newConfig, null, 2), `utf8`);
-    })
-    .catch((err) => {
-      log.error(err);
-    });
+export async function createConfig() {
+  try {
+    log.info(`create config`);
+    await _getDefaultConfig();
+    const newConfig = await _query();
+    return fs.writeJson(path.join(os.homedir(), `.git-backup.json`), newConfig, { spaces: 2 });
+  } catch (err) {
+    log.error(err.toString());
+  }
 }
