@@ -18,7 +18,7 @@ commander
   .option(`-c, --config`, `Show config`)
   .option(`-i, --init`, `create config (~/.git-backup.json)`)
   .option(`-b, --backup`, `Clone know repos defined in config.json`)
-  .option(`-D, --debug`, `enable debug messages`)
+  .option(`-d, --debug`, `enable debug messages`)
   .parse(process.argv);
 
 if (commander.debug) {
