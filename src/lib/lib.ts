@@ -267,11 +267,13 @@ export async function showConfig() {
  */
 export async function backup() {
   try {
+    log.openLog(`git-backup`);
     log.info(`backup`);
     await _getConfig();
     const repos = await _getRepos();
     log.info(`Known repos (${repos.length})`);
     _backup(repos);
+    log.closeLog();
   } catch (err) {
     log.error(err);
   }
