@@ -1,6 +1,6 @@
 {
   "name": "@mtechaccess/git-backup",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Clone all repos for a known user or organisation",
   "main": "lib",
   "scripts": {
