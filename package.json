@@ -39,7 +39,7 @@
     "fs-extra": "8.0.1",
     "got": "9.6.0",
     "inquirer": "6.4.1",
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
     "moment": "2.24.0",
     "request": "2.88.0",
     "request-promise": "4.2.4",
