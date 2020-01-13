@@ -1,9 +1,9 @@
 'use strict';
 
 import * as gitOps from '@mtechaccess/git-ops';
-import * as log from '@mtechaccess/logger';
+import { Logger } from '@mtechaccess/logger';
 import * as fs from 'fs-extra';
-import * as got from 'got';
+import got from 'got';
 import * as inquirer from 'inquirer';
 import * as os from 'os';
 import * as path from 'path';
@@ -12,6 +12,7 @@ let config: any;
 let defaultConfig: any;
 
 const pkg = fs.readJsonSync(path.resolve(__dirname, `..`, `..`, 'package.json'));
+const log = Logger.getInstance();
 
 const gitHubOpts = {
   headers: {
@@ -116,7 +117,7 @@ async function _getRepos(): Promise<any> {
 }
 
 /**
- * Called recursively to get all pages of data form github
+ * Called recursively to get all pages of data from github
  *
  * @param {*} options request options
  * @param {any[]} repos current set of repos
@@ -224,7 +225,7 @@ async function _query() {
     message: `Location to back up to:`,
     name: `backupDir`,
     type: `input`
-  }] as inquirer.Questions;
+  }] as inquirer.QuestionCollection;
 
   return await inquirer.prompt(questions);
 }

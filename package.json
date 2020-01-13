@@ -46,6 +46,7 @@
     "string": "3.3.3"
   },
   "devDependencies": {
+    "@types/fs-extra": "8.0.1",
     "@types/got": "9.6.9",
     "@types/inquirer": "6.5.0",
     "onchange": "6.1.0",
