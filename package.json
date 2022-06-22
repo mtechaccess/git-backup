@@ -37,7 +37,7 @@
     "@mtechaccess/logger": "2.1.0",
     "commander": "4.1.0",
     "fs-extra": "8.1.0",
-    "got": "10.2.2",
+    "got": "11.8.5",
     "inquirer": "7.0.3",
     "lodash": "4.17.15",
     "moment": "2.24.0",
